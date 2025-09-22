@@ -16,7 +16,14 @@ namespace MauiAppTempoAgora
         private async void Button_Clicked(object sender, EventArgs e)
         {
             try
-            {
+            {   //  Verifica conexão com a internet
+                if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+                {
+                    await DisplayAlert("Sem conexão", "Verifique sua internet e tente novamente.", "OK");
+                    return; // interrompe o método
+                }
+
+                //  Verifica se o campo cidade foi preenchido
                 if (!string.IsNullOrEmpty(txt_cidade.Text))
                 {
                     Tempo? t = await DataService.GetPrevisao(txt_cidade.Text);
@@ -41,7 +48,7 @@ namespace MauiAppTempoAgora
                     else
                     {
                         await DisplayAlert("Cidade não encontrada", $"Não localizamos a cidade '{txt_cidade.Text}'.", "OK");
-                        lbl_res.Text = "";
+                        lbl_res.Text = ""; //Quando a cidade não for encontrada 
                     }
                 }
                 else
